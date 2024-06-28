@@ -1,0 +1,10 @@
+fastapi
+sqlmodel
+alembic
+pydantic
+uvicorn
+gunicorn
+pytest
+httpx
+psycopg2
+fastapi-pagination
