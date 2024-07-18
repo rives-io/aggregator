@@ -1,8 +1,8 @@
 """Initial Version
 
-Revision ID: f4669b2aa96a
+Revision ID: 84a62aef8e07
 Revises: 
-Create Date: 2024-06-28 00:44:18.826343
+Create Date: 2024-06-28 10:07:37.909905
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision = 'f4669b2aa96a'
+revision = '84a62aef8e07'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -30,6 +30,17 @@ def upgrade() -> None:
     sa.Column('address', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('points', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('address')
+    )
+    op.create_table('awardedconsoleachievement',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('profile_address', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('ca_slug', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('points', sa.Integer(), nullable=True),
+    sa.Column('comments', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.ForeignKeyConstraint(['ca_slug'], ['consoleachievement.slug'], ),
+    sa.ForeignKeyConstraint(['profile_address'], ['profile.address'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('cartridge',
     sa.Column('id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
@@ -98,6 +109,7 @@ def downgrade() -> None:
     op.drop_table('rule')
     op.drop_table('collectedcartridges')
     op.drop_table('cartridge')
+    op.drop_table('awardedconsoleachievement')
     op.drop_table('profile')
     op.drop_table('consoleachievement')
     # ### end Alembic commands ###

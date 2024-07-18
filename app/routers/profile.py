@@ -49,7 +49,7 @@ class ProfileResponse(BaseModel):
 
 
 @router.get(
-    '/profile/{address}',
+    '/agg/profile/{address}',
     # response_model=models.Profile,
 )
 def get_profile(
@@ -90,8 +90,8 @@ def get_profile(
 
     if resp is None:
         raise HTTPException(status_code=404, detail='Profile not found.')
-
-    resp = resp._map
+    return resp
+    resp = resp._mapping
 
     return ProfileResponse(
         wallet=address,
@@ -105,7 +105,7 @@ def get_profile(
 
 
 @router.put(
-    '/profile',
+    '/agg_rw/profile',
     summary='Create or do Partial Update on a Profile record',
     response_model=models.Profile,
 )

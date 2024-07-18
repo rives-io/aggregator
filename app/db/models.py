@@ -132,7 +132,7 @@ class Rule(SQLModel, table=True):
     tapes: list[Tape] = Relationship(back_populates='rule')
 
 
-class AwardedConsoleAchievement(SQLModel, primary_key=True):
+class AwardedConsoleAchievement(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
     profile_address: str | None = Field(

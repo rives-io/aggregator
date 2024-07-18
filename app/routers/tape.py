@@ -12,7 +12,7 @@ router = APIRouter(tags=['tapes'])
 
 
 @router.put(
-    '/tape',
+    '/agg_rw/tape',
     summary='Create or update a tape',
     response_model=models.Tape,
 )
@@ -30,7 +30,7 @@ def create_or_update_tape(
 
 
 @router.put(
-    '/collected_tape',
+    '/agg_rw/collected_tape',
     summary='Create or update a collected tape',
     response_model=models.CollectedTapes,
 )

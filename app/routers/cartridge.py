@@ -12,7 +12,7 @@ router = APIRouter(tags=['cartridge'])
 
 
 @router.put(
-    '/cartridge',
+    '/agg_rw/cartridge',
     summary='Create or update a cartridge',
     response_model=models.Cartridge,
 )
@@ -28,7 +28,7 @@ def create_or_update_cartridge(
 
 
 @router.put(
-    '/collected_cartridge',
+    '/agg_rw/collected_cartridge',
     summary='Create or update a collected cartridge',
     response_model=models.CollectedCartridges,
 )

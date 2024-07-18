@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 
 from fastapi_pagination import add_pagination
@@ -13,7 +14,10 @@ app = FastAPI(
     license_info={
         'name': 'Apache License 2.0',
         'identifier': 'Apache-2.0',
-    }
+    },
+    openapi_url='/agg/openapi.json',
+    docs_url='/agg/docs',
+    redoc_url=None,
 )
 add_pagination(app)
 
@@ -21,6 +25,11 @@ add_pagination(app)
 @app.on_event('startup')
 def on_startup():
     get_engine()
+
+
+@app.get('/docs', include_in_schema=False)
+def redirect_docs():
+    return RedirectResponse('/agg/docs')
 
 
 app.include_router(profile.router)
@@ -34,7 +43,7 @@ class HealthResponse(BaseModel):
     status: str = "ok"
 
 
-@app.get('/health', tags=['healthcheck'])
+@app.get('/health', include_in_schema=False)
 async def healthcheck() -> HealthResponse:
     """Simple Healthcheck. Always returns ok."""
     return {'status': 'ok'}

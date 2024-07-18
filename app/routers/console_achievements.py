@@ -16,7 +16,7 @@ router = APIRouter(tags=['console_achievements'])
 
 
 @router.get(
-    '/console_achievement',
+    '/agg/console_achievement',
     summary='List existing Console Achievements',
 )
 def list_console_achievements(
@@ -27,7 +27,7 @@ def list_console_achievements(
 
 
 @router.get(
-    '/console_achievement/{slug}',
+    '/agg/console_achievement/{slug}',
     summary='List existing Console Achievements',
     response_model=models.ConsoleAchievement,
 )
@@ -44,7 +44,7 @@ def get_console_achievement(
 
 
 @router.put(
-    '/console_achievement',
+    '/agg_rw/console_achievement',
     summary='Create or update a Console Achievement',
     response_model=models.ConsoleAchievement,
 )
@@ -66,7 +66,7 @@ class AwardedConsoleAchievementCreate(SQLModel):
 
 
 @router.post(
-    '/awarded_console_achievement',
+    '/agg_rw/awarded_console_achievement',
     summary='Award someone a Console Achievement',
     response_model=models.AwardedConsoleAchievement,
 )

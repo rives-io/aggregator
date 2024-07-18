@@ -12,7 +12,7 @@ router = APIRouter(tags=['rule'])
 
 
 @router.put(
-    '/rule',
+    '/agg_rw/rule',
     summary='Create or update a rule',
     response_model=models.Rule,
 )
