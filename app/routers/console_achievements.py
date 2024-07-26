@@ -63,6 +63,7 @@ class AwardedConsoleAchievementCreate(SQLModel):
     )
     points: int
     comments: str | None = None
+    tape_id: str | None = None
 
 
 @router.post(
@@ -78,6 +79,12 @@ def create_or_update_award(
         models.Profile(address=award.profile_address),
         session,
     )
+
+    if award.tape_id is not None:
+        create_or_update(
+            models.Tape(id=award.tape_id),
+            session,
+        )
 
     new_record = models.AwardedConsoleAchievement.parse_obj(award)
 

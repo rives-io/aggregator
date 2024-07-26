@@ -8,8 +8,12 @@ from .db.session import get_engine
 from .routers import profile, tape, cartridge, rule, console_achievements
 
 app = FastAPI(
-    title="RIVES External Indexer",
-    summary="Third Indexer of the Solution",
+    title="RIVES Aggregator",
+    summary=(
+        "Aggregate information from multiple sources and make them readily "
+        "available for easy querying. All information found here comes from "
+        "verifiable notices of the Cartesi DApp or from the blockchain."
+    ),
     version='0.1.0',
     license_info={
         'name': 'Apache License 2.0',

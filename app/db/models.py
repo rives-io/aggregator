@@ -48,6 +48,10 @@ class Tape(SQLModel, table=True):
         back_populates='tape'
     )
 
+    console_achievements: list["AwardedConsoleAchievement"] = Relationship(
+        back_populates='tape'
+    )
+
 
 class CollectedCartridges(SQLModel, table=True):
     cartridge_id: str | None = Field(
@@ -145,11 +149,17 @@ class AwardedConsoleAchievement(SQLModel, table=True):
     )
     created_at: datetime.datetime | None = None
 
-    points: int | None = None
+    points: int = 0
     comments: str | None = None
 
     profile: Profile = Relationship(back_populates='console_achievements')
     achievement: "ConsoleAchievement" = Relationship(back_populates='awarded')
+
+    tape_id: str | None = Field(
+        default=None,
+        foreign_key='tape.id',
+    )
+    tape: Tape = Relationship(back_populates='console_achievements')
 
 
 class ConsoleAchievement(SQLModel, table=True):
@@ -158,7 +168,7 @@ class ConsoleAchievement(SQLModel, table=True):
     name: str | None = None
     description: str | None = None
 
-    points: int | None = None
+    points: int = 0
 
     awarded: list[AwardedConsoleAchievement] = Relationship(
         back_populates='achievement'
