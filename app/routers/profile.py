@@ -6,7 +6,6 @@ import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import LimitOffsetPage
-from fastapi_pagination.customization import CustomizedPage, UseModelConfig
 from fastapi_pagination.ext.sqlmodel import paginate
 from pydantic import BaseModel
 
@@ -129,19 +128,13 @@ class AchievementResponse(BaseModel):
     tape_id: str | None = None
 
 
-ProfileAchievementPage = CustomizedPage[
-    LimitOffsetPage,
-    UseModelConfig(extra='allow')
-]
-
-
 @router.get(
     '/agg/profile/{address}/console_achievements',
 )
 def get_profile_achievements(
     address: str,
     session: Session = Depends(get_session),
-) -> ProfileAchievementPage[AchievementResponse]:
+) -> LimitOffsetPage[AchievementResponse]:
 
     query = (
         select(
