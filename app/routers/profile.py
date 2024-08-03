@@ -148,6 +148,7 @@ def get_profile_achievements(
         )
         .join(models.AwardedConsoleAchievement.achievement)
         .where(models.AwardedConsoleAchievement.profile_address == address)
+        .order_by(models.AwardedConsoleAchievement.created_at.desc())
     )
     return paginate(session, query)
 
