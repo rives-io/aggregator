@@ -1,18 +1,43 @@
 """
 Routes for Console Achievements handling
 """
+import base64
 import datetime
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, Response
 
 from fastapi_pagination import LimitOffsetPage
 from fastapi_pagination.ext.sqlmodel import paginate
-from sqlmodel import SQLModel, Session, select, Field
+from pydantic import BaseModel, field_validator, field_serializer
+from sqlmodel import Session, select, Field
 
 from ..db import models
 from ..db.session import get_session, create_or_update
+from ..file_signatures import guess_mime_type
 
 router = APIRouter(tags=['console_achievements'])
+
+
+class ConsoleAchievementAPI(BaseModel):
+    slug: str
+    name: str | None = None
+    description: str | None = None
+    points: int = 0
+    image_data: bytes | None = None
+    image_type: str | None = None
+
+    @field_validator('image_data', mode='before')
+    @classmethod
+    def validate_image_data(cls, value: str | bytes | None) -> bytes | None:
+        if value is None:
+            return
+        if isinstance(value, bytes):
+            return value
+        return base64.b64decode(value)
+
+    @field_serializer('image_data', when_used='json-unless-none')
+    def serialize_image_data(self, value: bytes, _info):
+        return base64.b64encode(value)
 
 
 @router.get(
@@ -21,7 +46,7 @@ router = APIRouter(tags=['console_achievements'])
 )
 def list_console_achievements(
     session: Session = Depends(get_session),
-) -> LimitOffsetPage[models.ConsoleAchievement]:
+) -> LimitOffsetPage[ConsoleAchievementAPI]:
     query = select(models.ConsoleAchievement)
     return paginate(session, query)
 
@@ -29,7 +54,7 @@ def list_console_achievements(
 @router.get(
     '/agg/console_achievement/{slug}',
     summary='List existing Console Achievements',
-    response_model=models.ConsoleAchievement,
+    response_model=ConsoleAchievementAPI,
 )
 def get_console_achievement(
     slug: str,
@@ -43,19 +68,39 @@ def get_console_achievement(
     return result
 
 
+@router.get(
+    '/agg/console_achievement/{slug}/image',
+    summary='List existing Console Achievements',
+)
+def get_console_achievement_image(
+    slug: str,
+    session: Session = Depends(get_session),
+):
+    result = session.get(models.ConsoleAchievement, slug)
+
+    if result is None:
+        raise HTTPException(status_code=404, detail='Not Found')
+
+    return Response(content=result.image_data, media_type=result.image_type)
+
+
 @router.put(
     '/agg_rw/console_achievement',
     summary='Create or update a Console Achievement',
-    response_model=models.ConsoleAchievement,
+    response_model=ConsoleAchievementAPI,
 )
 def create_or_update_ca(
-    console_achievement: models.ConsoleAchievement,
+    ca: ConsoleAchievementAPI,
     session: Session = Depends(get_session),
 ):
+    if (ca.image_data is not None) and (ca.image_type is None):
+        ca.image_type = guess_mime_type(ca.image_data)
+
+    console_achievement = models.ConsoleAchievement.model_validate(ca)
     return create_or_update(console_achievement, session)
 
 
-class AwardedConsoleAchievementCreate(SQLModel):
+class AwardedConsoleAchievementCreate(BaseModel):
     profile_address: str
     ca_slug: str
     created_at: datetime.datetime = Field(
@@ -86,10 +131,37 @@ def create_or_update_award(
             session,
         )
 
-    new_record = models.AwardedConsoleAchievement.parse_obj(award)
+    new_record = models.AwardedConsoleAchievement.model_validate(award)
 
     session.add(new_record)
     session.commit()
     session.refresh(new_record)
 
     return new_record
+
+
+@router.put('/agg_rw/console_achievement/{slug}/image')
+def upload_image(
+    slug: str,
+    uploaded: UploadFile,
+    session: Session = Depends(get_session),
+):
+    # Get achievement
+    query = (
+        select(models.ConsoleAchievement)
+        .where(models.ConsoleAchievement.slug == slug)
+    )
+    achievement = session.exec(query).one_or_none()
+
+    if achievement is None:
+        raise HTTPException(status_code=404)
+
+    data = uploaded.file.read()
+    mime_type = guess_mime_type(data)
+
+    achievement.image_data = data
+    achievement.image_type = mime_type
+
+    session.add(achievement)
+    session.commit()
+    return {'status': 'Ok'}

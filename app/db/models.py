@@ -1,6 +1,6 @@
 import datetime
 
-from sqlmodel import Field, SQLModel, Relationship
+from sqlmodel import Field, LargeBinary, SQLModel, Relationship
 
 
 class CollectedTapes(SQLModel, table=True):
@@ -169,6 +169,9 @@ class ConsoleAchievement(SQLModel, table=True):
     description: str | None = None
 
     points: int = 0
+
+    image_data: bytes | None = Field(sa_type=LargeBinary)
+    image_type: str | None = None
 
     awarded: list[AwardedConsoleAchievement] = Relationship(
         back_populates='achievement'

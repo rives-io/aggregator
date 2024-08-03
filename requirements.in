@@ -1,7 +1,9 @@
 fastapi
+python-multipart
 sqlmodel
 alembic
 pydantic
+pydantic-settings
 uvicorn
 gunicorn
 pytest

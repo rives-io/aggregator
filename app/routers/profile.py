@@ -1,13 +1,14 @@
 """
 Routes for profile retrieval
 """
+import base64
 import datetime
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import LimitOffsetPage
 from fastapi_pagination.ext.sqlmodel import paginate
-from pydantic import BaseModel
+from pydantic import BaseModel, field_serializer
 
 from sqlmodel import Session, select, func
 
@@ -126,6 +127,12 @@ class AchievementResponse(BaseModel):
     points: int = 0
     comments: str | None = None
     tape_id: str | None = None
+    image_data: bytes | None = None
+    image_type: str | None = None
+
+    @field_serializer('image_data', when_used='json-unless-none')
+    def serialize_image_data(self, value: bytes, _info):
+        return base64.b64encode(value)
 
 
 @router.get(
@@ -141,6 +148,8 @@ def get_profile_achievements(
             models.AwardedConsoleAchievement.ca_slug,
             models.ConsoleAchievement.name,
             models.ConsoleAchievement.description,
+            models.ConsoleAchievement.image_data,
+            models.ConsoleAchievement.image_type,
             models.AwardedConsoleAchievement.created_at,
             models.AwardedConsoleAchievement.points,
             models.AwardedConsoleAchievement.comments,
