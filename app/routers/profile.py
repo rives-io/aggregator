@@ -162,6 +162,65 @@ def get_profile_achievements(
     return paginate(session, query)
 
 
+class SummarizedConsoleAchievement(BaseModel):
+    ca_slug: str
+    latest: datetime.datetime
+    total_points: int
+    count: int
+    name: str | None
+    description: str | None
+    image_data: bytes | None
+    image_type: str | None
+
+    @field_serializer('image_data', when_used='json-unless-none')
+    def serialize_image_data(self, value: bytes, _info):
+        return base64.b64encode(value)
+
+
+@router.get(
+    '/agg/profile/{address}/console_achievements_summary',
+)
+def get_profile_achievements_summary(
+    address: str,
+    session: Session = Depends(get_session),
+) -> LimitOffsetPage[SummarizedConsoleAchievement]:
+
+    cte = (
+        select(
+            models.AwardedConsoleAchievement.ca_slug,
+            (
+                func.max(models.AwardedConsoleAchievement.created_at)
+                .label('latest')
+            ),
+            (
+                func.sum(models.AwardedConsoleAchievement.points)
+                .label('total_points')
+            ),
+            (
+                func.count(models.AwardedConsoleAchievement.ca_slug)
+                .label('count')
+            ),
+        )
+        .where(models.AwardedConsoleAchievement.profile_address == address)
+        .group_by(models.AwardedConsoleAchievement.ca_slug)
+        .cte()
+    )
+
+    query = (
+        select(
+            cte,
+            models.ConsoleAchievement.name,
+            models.ConsoleAchievement.description,
+            models.ConsoleAchievement.image_data,
+            models.ConsoleAchievement.image_type,
+        )
+        .join(models.ConsoleAchievement)
+        .order_by(cte.c.latest.desc())
+    )
+
+    return paginate(session, query)
+
+
 @router.put(
     '/agg_rw/profile',
     summary='Create or do Partial Update on a Profile record',
