@@ -63,7 +63,7 @@ def create_or_update(instance: SQLModel, session: Session):
             raise exc
 
     # Try the partial update flow
-    update_data = instance.dict(exclude_unset=True)
+    update_data = instance.model_dump(exclude_unset=True, exclude_none=True)
     for field, value in update_data.items():
         setattr(db_record, field, value)
 
