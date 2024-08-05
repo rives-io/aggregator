@@ -14,7 +14,7 @@ app = FastAPI(
         "available for easy querying. All information found here comes from "
         "verifiable notices of the Cartesi DApp or from the blockchain."
     ),
-    version='0.2.0',
+    version='0.3.0',
     license_info={
         'name': 'Apache License 2.0',
         'identifier': 'Apache-2.0',
