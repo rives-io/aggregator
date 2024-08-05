@@ -45,7 +45,7 @@ class Cartridge(BaseModel):
 class ProfileResponse(BaseModel):
     address: str
 
-    portfolio_value: float
+    portfolio_value: float = 0.0
     n_cartridges_created: int
     n_cartridges_collected: int
     n_tapes_created: int
@@ -53,6 +53,52 @@ class ProfileResponse(BaseModel):
     n_console_achievements: int
 
     rives_points: int
+
+
+@router.get(
+    '/agg/profile',
+)
+def list_profiles(
+    session: Session = Depends(get_session),
+) -> LimitOffsetPage[ProfileResponse]:
+
+    query = (
+        select(
+            models.Profile.address,
+        )
+    )
+
+    col_profile = query.selected_columns['address']
+
+    query = query.add_columns(
+        # Collected Tapes
+        select(func.count(models.CollectedTapes.tape_id))
+        .where(models.CollectedTapes.profile_address == col_profile)
+        .scalar_subquery().label('n_tapes_collected'),
+        # Collected Cartridges
+        select(func.count(models.CollectedCartridges.cartridge_id))
+        .where(models.CollectedCartridges.profile_address == col_profile)
+        .scalar_subquery().label('n_cartridges_collected'),
+        # Collected Tapes
+        select(func.count(models.Tape.id))
+        .where(models.Tape.creator_address == col_profile)
+        .scalar_subquery().label('n_tapes_created'),
+        # Collected Cartridges
+        select(func.count(models.Cartridge.id))
+        .where(models.Cartridge.creator_address == col_profile)
+        .scalar_subquery().label('n_cartridges_created'),
+        # Number of achievements
+        select(func.count(models.AwardedConsoleAchievement.id))
+        .where(models.AwardedConsoleAchievement.profile_address == col_profile)
+        .scalar_subquery().label('n_console_achievements'),
+        # Total points from achievements
+        select(func.sum(models.AwardedConsoleAchievement.points))
+        .where(models.AwardedConsoleAchievement.profile_address == col_profile)
+        .scalar_subquery().label('rives_points'),
+    )
+
+    query = query.order_by(query.selected_columns['rives_points'].desc())
+    return paginate(session, query)
 
 
 @router.get(
