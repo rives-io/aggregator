@@ -68,6 +68,36 @@ def get_console_achievement(
     return result
 
 
+class ConsoleAchievementPlayer(BaseModel):
+    profile_address: str | None
+    created_at: datetime.datetime | None
+    points: int
+    tape_id: str | None
+
+
+@router.get(
+    '/agg/console_achievement/{slug}/players',
+    summary='List players who unlocked a given Console Achievement',
+)
+def list_console_achievement_players(
+    slug: str,
+    session: Session = Depends(get_session),
+) -> LimitOffsetPage[ConsoleAchievementPlayer]:
+    query = (
+        select(
+            models.AwardedConsoleAchievement.profile_address,
+            models.AwardedConsoleAchievement.created_at,
+            models.AwardedConsoleAchievement.points,
+            models.AwardedConsoleAchievement.tape_id,
+        )
+        .where(
+            models.AwardedConsoleAchievement.ca_slug == slug
+        )
+        .order_by(models.AwardedConsoleAchievement.created_at.desc())
+    )
+    return paginate(session, query)
+
+
 @router.get(
     '/agg/console_achievement/{slug}/image',
     summary='List existing Console Achievements',
