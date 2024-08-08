@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from fastapi_pagination import add_pagination
@@ -24,6 +25,14 @@ app = FastAPI(
     redoc_url=None,
 )
 add_pagination(app)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.on_event('startup')
