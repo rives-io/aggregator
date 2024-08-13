@@ -1,0 +1,25 @@
+meta {
+  name: Create Rule
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/agg_rw/rule
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": "rule_ruleachievement_1",
+    "name": "My Cartridge Competition",
+    "description": "Exceptions will be raised.",
+    "created_at": "2024-08-12T18:11:18.898Z",
+    "start": "2024-08-14T18:11:18.898Z",
+    "end": "2024-08-20T18:11:18.898Z",
+    "cartridge_id": "cartridge_ruleachievement_1",
+    "created_by": "profile_ruleachievement_2"
+  }
+  
+}

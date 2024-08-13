@@ -1,0 +1,17 @@
+meta {
+  name: Add Achievement to Rule
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/agg_rw/rule/rule_ruleachievement_1/achievement
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "ca_slug": "achievement_ruleachievement_1"
+  }
+}
