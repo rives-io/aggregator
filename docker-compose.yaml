@@ -4,6 +4,9 @@ services:
     environment:
       POSTGRES_PASSWORD: "postgres123"
     volumes:
-      - "$PWD/.local/postgres:/var/lib/postgresql/data"
+      - "pg-data:/var/lib/postgresql/data"
     ports:
     - '5432:5432'
+
+volumes:
+  pg-data: {}
