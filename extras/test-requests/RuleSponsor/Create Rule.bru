@@ -1,0 +1,27 @@
+meta {
+  name: Create Rule
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/agg_rw/rule
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": "rule_rulesponsor_1",
+    "name": "My Cartridge Competition",
+    "description": "Exceptions will be raised.",
+    "created_at": "2024-08-12T18:11:18.898Z",
+    "start": "2024-08-14T18:11:18.898Z",
+    "end": "2024-08-20T18:11:18.898Z",
+    "cartridge_id": "cartridge_rulesponsor_1",
+    "created_by": "profile_ruleasponsor_2",
+    "sponsor_name": "Cartesi",
+    "sponsor_image_data": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAATsAAAE7AGKbv1yAAADY0lEQVR4nK1X6UtUURQ/Yo7inqUWLaQGRRtt0ALRlyKXjKLob4iIqMQvfagvaWYEFS1IUARCEARl5qQihEQRUR8sd1ywLHNJcOa+CVp+cd7t+WbmzXv3TnXgx7x3597zO/ecc887l0hXAB8FUUICtSTQQgJ9ZGDcBD8LNJv/BVFszv1vMo1sEqgmA5NkAJqYIIEq+oqsvycG5pCBU0riDxNehkySwAkCEuMlzyQDj5U7vfcAtKwAFPjhPY/Dw57UkhCKSKBXSd7QDEpOBptrPqvmC3RTCIXqnQt0KpW1PQelpUlyxsHDerkh0OPuCSCRDDxRKml/BcrIsMkZPh9oZFzXiObYOWGYCee9+HUHKGdeJLmFmku6J4RRGUk+jWxltr/rBy1YGJucsWIlSPzS9UKAAsi3DZDn3H3BwChoyVJ3cgucG7peEKixYu8zC4fX5OlvoM6BSFRfdBpw5UY8YRgnIInM8qq/KNKovHybvLhMXQ+iEcJudn+t+TIekNmscjPj8nWp4PQZ+b5xM2giKMfq78viVFAYiYdNLmEQaJkdOHBIz4At2+T8oc8y+YbH5Htjq12colG+P5YX/GxA/+wAVzQdAxISQF2Dcs3Md/n77CUoPd19DXv342S0B3r5/H+ZHQj+lO7TMeLW3cj6kJWtXnOtLtoDY5EGMM6eUyvaU2rvnHH1pp7RO3bGMECEhcCKa1KSuxJOOE5YnvvijfwdndJLYA5dz3BUCERYEloo2xdbAWdzeMKlpID6RuR7yV49L1TVOpKw1mFAU5vzGK1aA+rosz9IVsJZCh/5QRs2qXHkWLgHznMhKo6reLARuXn2jtatj7+I2YVoF5fiJGUpDkdpudOtt+tlSMLh3aqFlWIWbiB1DeDjp4rz6rUyMb30mO63hLtX3a53ygDNzXEnL1ouT5I3+QwFkDfLb4rASW0vHD0em3zRYlD3kI6OCnJpyRq1DHjb5SSfnyvH1eufurfpMNvx91pGbN1uk2dm2UXJ2/Xd6vY8hEJzokpZ3R1JnpoKam3XIe+iEAq8yS0BMshAgzIZuSGJ9Z13wq9/MYnMiUqzgXRTPPhJtWteWxH/1YzChLtXgQt/bsJ6p4S/sNztOI7avwhXLe7hWDFnsry+8aecyfjZbxYXnsMXW035DQgp0fdg7Qb1AAAAAElFTkSuQmCC"
+  }
+  
+}

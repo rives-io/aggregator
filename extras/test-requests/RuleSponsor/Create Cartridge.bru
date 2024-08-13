@@ -1,0 +1,21 @@
+meta {
+  name: Create Cartridge
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{baseUrl}}/agg_rw/cartridge
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": "cartridge_rulesponsor_1",
+    "name": "Meu cartucho 2",
+    "authors": "Autor 1, Autor 2",
+    "created_at": "2024-01-01T00:00:00Z",
+    "creator_address": "profile_ruleachievement_1"
+  }
+}

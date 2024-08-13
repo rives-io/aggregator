@@ -146,6 +146,12 @@ class Rule(SQLModel, table=True):
 
     created_by: str | None = None
 
+    sponsor_name: str | None = None
+    sponsor_image_data: bytes | None = Field(default=None, sa_type=LargeBinary)
+    sponsor_image_type: str | None = None
+
+    prize: str | None = None
+
     tapes: list[Tape] = Relationship(back_populates='rule')
 
     achievements: list['ConsoleAchievement'] = Relationship(

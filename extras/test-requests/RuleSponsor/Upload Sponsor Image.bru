@@ -1,0 +1,15 @@
+meta {
+  name: Upload Sponsor Image
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/agg_rw/rule/rule_rulesponsor_1/sponsor_image
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  uploaded: @file(/run/user/1000/doc/5a355e93/cartesi-ctsi-logo-256.png)
+}
