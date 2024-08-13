@@ -118,6 +118,19 @@ class Profile(SQLModel, table=True):
     )
 
 
+class RuleConsoleAchievement(SQLModel, table=True):
+    rule_id: str | None = Field(
+        default=None,
+        foreign_key='rule.id',
+        primary_key=True,
+    )
+    ca_slug: str | None = Field(
+        default=None,
+        foreign_key='consoleachievement.slug',
+        primary_key=True,
+    )
+
+
 class Rule(SQLModel, table=True):
     id: str = Field(default=None, primary_key=True)
 
@@ -131,9 +144,14 @@ class Rule(SQLModel, table=True):
     cartridge_id: str | None = Field(default=None, foreign_key='cartridge.id')
     cartridge: Cartridge = Relationship(back_populates='rules')
 
-    created_by: str | None
+    created_by: str | None = None
 
     tapes: list[Tape] = Relationship(back_populates='rule')
+
+    achievements: list['ConsoleAchievement'] = Relationship(
+        back_populates='rules',
+        link_model=RuleConsoleAchievement,
+    )
 
 
 class AwardedConsoleAchievement(SQLModel, table=True):
@@ -175,4 +193,9 @@ class ConsoleAchievement(SQLModel, table=True):
 
     awarded: list[AwardedConsoleAchievement] = Relationship(
         back_populates='achievement'
+    )
+
+    rules: list[Rule] = Relationship(
+        back_populates='achievements',
+        link_model=RuleConsoleAchievement,
     )
