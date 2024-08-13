@@ -52,7 +52,7 @@ class ProfileResponse(BaseModel):
     n_tapes_collected: int
     n_console_achievements: int
 
-    rives_points: int
+    rives_points: int = 0
 
 
 @router.get(
@@ -92,7 +92,9 @@ def list_profiles(
         .where(models.AwardedConsoleAchievement.profile_address == col_profile)
         .scalar_subquery().label('n_console_achievements'),
         # Total points from achievements
-        select(func.sum(models.AwardedConsoleAchievement.points))
+        select(
+            func.coalesce(func.sum(models.AwardedConsoleAchievement.points), 0)
+        )
         .where(models.AwardedConsoleAchievement.profile_address == col_profile)
         .scalar_subquery().label('rives_points'),
     )
