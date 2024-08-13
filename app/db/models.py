@@ -75,7 +75,7 @@ class CollectedCartridges(SQLModel, table=True):
 class Cartridge(SQLModel, table=True):
     id: str = Field(default=None, primary_key=True)
 
-    name: str
+    name: str | None = None
     authors: str | None = None
 
     created_at: datetime.datetime
