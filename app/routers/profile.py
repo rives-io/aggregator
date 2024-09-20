@@ -111,7 +111,7 @@ def get_profile(
     address: str,
     session: Session = Depends(get_session),
 ):
-
+    address = address.lower()
     stmt = (
         select(
             models.Profile.address,
@@ -190,7 +190,7 @@ def get_profile_achievements(
     address: str,
     session: Session = Depends(get_session),
 ) -> LimitOffsetPage[AchievementResponse]:
-
+    address = address.lower()
     query = (
         select(
             models.AwardedConsoleAchievement.ca_slug,
@@ -232,7 +232,7 @@ def get_profile_achievements_summary(
     address: str,
     session: Session = Depends(get_session),
 ) -> LimitOffsetPage[SummarizedConsoleAchievement]:
-
+    address = address.lower()
     cte = (
         select(
             models.AwardedConsoleAchievement.ca_slug,
