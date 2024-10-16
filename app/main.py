@@ -6,7 +6,14 @@ from pydantic import BaseModel
 from fastapi_pagination import add_pagination
 
 from .db.session import get_engine
-from .routers import profile, tape, cartridge, rule, console_achievements
+from .routers import (
+    profile,
+    tape,
+    cartridge,
+    rule,
+    console_achievements,
+    notifications,
+)
 
 app = FastAPI(
     title="RIVES Aggregator",
@@ -50,6 +57,7 @@ app.include_router(tape.router)
 app.include_router(cartridge.router)
 app.include_router(rule.router)
 app.include_router(console_achievements.router)
+app.include_router(notifications.router)
 
 
 class HealthResponse(BaseModel):

@@ -117,6 +117,10 @@ class Profile(SQLModel, table=True):
         back_populates='profile'
     )
 
+    notifications: list["Notification"] = Relationship(
+        back_populates='profile'
+    )
+
 
 class RuleConsoleAchievement(SQLModel, table=True):
     rule_id: str | None = Field(
@@ -205,3 +209,18 @@ class ConsoleAchievement(SQLModel, table=True):
         back_populates='achievements',
         link_model=RuleConsoleAchievement,
     )
+
+
+class Notification(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+
+    created_at: datetime.datetime | None = None
+    unread: bool = True
+    message: str
+    url: str | None = None
+
+    profile_address: str | None = Field(
+        default=None,
+        foreign_key='profile.address',
+    )
+    profile: Profile = Relationship(back_populates='notifications')
