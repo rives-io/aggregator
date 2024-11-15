@@ -78,7 +78,7 @@ class Cartridge(SQLModel, table=True):
     name: str | None = None
     authors: str | None = None
 
-    created_at: datetime.datetime
+    created_at: datetime.datetime | None = None
 
     buy_value: int = 0
     sell_value: int = 0

@@ -24,7 +24,7 @@ def create_or_update_tape(
         create_or_update(models.Profile(address=tape.creator_address), session)
 
     if tape.rule_id is not None:
-        create_or_update(models.Rule(id=tape.rule_id))
+        create_or_update(models.Rule(id=tape.rule_id), session)
 
     return create_or_update(tape, session)
 
