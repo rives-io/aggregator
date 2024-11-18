@@ -38,12 +38,20 @@ class NotificationCreate(NotificationBase):
 )
 def list_notifications(
     address: str,
+    unread: bool | None = None,
     session: Session = Depends(get_session),
 ) -> LimitOffsetPage[NotificationView]:
 
     query = (
         select(models.Notification)
         .where(models.Notification.profile_address == address.lower())
+    )
+
+    if unread is not None:
+        query = query.where(models.Notification.unread == unread)
+
+    query = (
+        query
         .order_by(models.Notification.created_at.desc())
     )
     return paginate(session, query)
