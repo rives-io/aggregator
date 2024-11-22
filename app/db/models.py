@@ -216,6 +216,7 @@ class Notification(SQLModel, table=True):
 
     created_at: datetime.datetime | None = None
     unread: bool = True
+    title: str | None = None
     message: str
     url: str | None = None
 

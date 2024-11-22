@@ -19,6 +19,7 @@ router = APIRouter(tags=['notifications'])
 
 class NotificationBase(BaseModel):
     created_at: datetime.datetime
+    title: str | None = None
     message: str
     url: str | None = None
     unread: bool = True
