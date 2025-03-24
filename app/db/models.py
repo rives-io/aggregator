@@ -44,6 +44,11 @@ class Tape(SQLModel, table=True):
     rule_id: str | None = Field(default=None, foreign_key='rule.id')
     rule: "Rule" = Relationship(back_populates='tapes')
 
+    tape: str | None = None
+    incard: str | None = None
+    args: str | None = None
+    entropy: str | None = None
+
     collectors: list[CollectedTapes] = Relationship(
         back_populates='tape'
     )

@@ -1,7 +1,8 @@
 """
 Routes for profile retrieval
 """
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 
 from sqlmodel import Session
 
@@ -49,3 +50,17 @@ def create_or_update_collected_tape(
     )
 
     return create_or_update(collected_tape, session)
+
+@router.get(
+    '/agg/tape/{tape_id}',
+    summary='Get tape data',
+    response_model=models.Tape,
+)
+def get_tape(
+    tape_id: str,
+    session: Session = Depends(get_session),
+):
+    tape = session.get(models.Tape, tape_id)
+    if tape is None:
+        raise HTTPException(status_code=404, detail='Tape not found.')
+    return tape
